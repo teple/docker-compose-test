@@ -1,4 +1,5 @@
 version: '3.6'
+
 services: 
   mariadb:
     container_name: mariadb-use-volume-test
@@ -9,10 +10,24 @@ services:
     volumes: 
       - ${HOME}/${MYSQL_DATA_PATH}:/var/lib/mysql
       - ${HOME}/${MYSQL_CONFIG_PATH}:/etc/mysql/conf.d
+    networks: 
+      - study
+
   nginx:
     container_name: nginx-use-volume-test
     image: nginx:latest
     restart: always
     ports: 
-      - 80:80
-      - 443:443
+      # - 80:80
+      - 80:8080
+      # - 443:443
+    volumes: 
+      # - ${HOME}/${NGINX_CONFIG}:/etc/nginx
+      # - ${HOME}/${NGINX_VHOSTS}:/etc/nginx/conf.d/vhosts.conf
+    networks: 
+      - study
+
+networks:
+  study:
+    external: 
+      name: ${DOCKER_NETWORK_NAME_CONFIG}
