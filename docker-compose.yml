@@ -1,0 +1,18 @@
+version: '3.6'
+services: 
+  mariadb:
+    container_name: mariadb-use-volume-test
+    image: mariadb:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PW}
+    volumes: 
+      - ${HOME}/${MYSQL_DATA_PATH}:/var/lib/mysql
+      - ${HOME}/${MYSQL_CONFIG_PATH}:/etc/mysql/conf.d
+  nginx:
+    container_name: nginx-use-volume-test
+    image: nginx:latest
+    restart: always
+    ports: 
+      - 80:80
+      - 443:443
