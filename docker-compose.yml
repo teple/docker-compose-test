@@ -10,24 +10,27 @@ services:
     volumes: 
       - ${HOME}/${MYSQL_DATA_PATH}:/var/lib/mysql
       - ${HOME}/${MYSQL_CONFIG_PATH}:/etc/mysql/conf.d
-    networks: 
-      - study
+    # networks: 
+    #   - study-proxy
 
   nginx:
     container_name: nginx-use-volume-test
     image: nginx:latest
     restart: always
+    # environment: 
+    #   - NGINX_HOST=mongmong.p-e.kr
+    #   - NGINX_PORT=3000
     ports: 
-      # - 80:80
-      - 80:8080
+      - 80:80
       # - 443:443
-    volumes: 
-      # - ${HOME}/${NGINX_CONFIG}:/etc/nginx
+    # volumes: 
+      # - ${HOME}/${NGINX_DEFAULT_CONFIG}:/etc/nginx/conf.d/default.conf.template
       # - ${HOME}/${NGINX_VHOSTS}:/etc/nginx/conf.d/vhosts.conf
-    networks: 
-      - study
+    # networks: 
+    #   - study-proxy
+    # command: /bin/bash -c "envsubst < /etc/nginx/conf.d/nginx-docker-setting > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
 
 networks:
-  study:
+  default:
     external: 
       name: ${DOCKER_NETWORK_NAME_CONFIG}
