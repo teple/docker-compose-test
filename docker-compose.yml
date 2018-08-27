@@ -13,6 +13,19 @@ services:
     # networks: 
     #   - study-proxy
 
+  node-server:
+    container_name: node-server-test
+    image: node:carbon
+    # restart: always
+    expose: 
+      - ${NODE_SERVER_PORT}
+    volumes:
+      - ${HOME}/${NODE_DELIVERY_PATH}:/var/www
+    working_dir: /var/www
+    command: >
+      /bin/bash -c
+      'npm start'
+
   nginx:
     container_name: nginx-use-volume-test
     image: nginx:latest
@@ -22,14 +35,14 @@ services:
     #   - NGINX_PORT=3000
     ports: 
       - 80:80
-      # - 443:443
-    # volumes: 
-      # - ${HOME}/${NGINX_DEFAULT_CONFIG}:/etc/nginx/conf.d/default.conf.template
-      # - ${HOME}/${NGINX_VHOSTS}:/etc/nginx/conf.d/vhosts.conf
-    # networks: 
-    #   - study-proxy
-    # command: /bin/bash -c "envsubst < /etc/nginx/conf.d/nginx-docker-setting > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
-
+      - 443:443
+    volumes: 
+      - ${HOME}/${NGINX_DEFAULT_CONFIG}:/etc/nginx/conf.d/default.conf.template
+      - ${SSL_CERT_PATH}:/etc/letsencrypt
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf.template/default.conf > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+    links: 
+      - node-server
+  
 networks:
   default:
     external: 
